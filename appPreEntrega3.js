@@ -1,0 +1,99 @@
+///Captura elementos del DOM
+let servicios = [];
+let valorServiciosCliente = [];
+
+const empresa = document.getElementById('empresa');
+const nameContacto = document.getElementById('name-contacto');
+const numContacto = document.getElementById('num-contacto');
+const numUsuarios = document.getElementById('num-usuarios');
+const selectRuta = document.getElementById('ruta');
+const enviarSolicitud = document.getElementById('sol-servicio');
+const vaciarTabla = document.getElementById('vaciar');
+let formSolicitud = document.getElementById('form-sol-servicio');
+let tableFill = document.getElementById('items');
+
+
+// Objeto rutas de transporte
+let rutasTransporte = [new Ruta("MDE-JMC/JMC-MDE", "Transporte entre Medellin y el aeropuerto JMC o viceversa", 90000),
+new Ruta("ENV-JMC/JMC-ENV", "Transporte entre Envigado y el aeropuerto JMC o viceversa", 95000),
+new Ruta("SAB-JMC/JMC-SAB", "Transporte entre Sabaneta y el aeropuerto JMC o viceversa", 100000),
+new Ruta("BEL-JMC/JMC-BEL", "Transporte entre Bello y el aeropuerto JMC o viceversa", 105000),
+];
+
+// Guardando los items del objeto rutasTransporte en el localStorage
+localStorage.setItem('rutas', JSON.stringify(rutasTransporte));
+
+// Función para cargar rutas en dropdown "SELECCIONE LA RUTA"
+function cargarRutasDropdwn() {
+    rutasTransporte = JSON.parse(localStorage.getItem('rutas'));
+    rutasTransporte.forEach((rutaT, index) => {
+        let optionDropdownRutas = document.createElement('option');
+        optionDropdownRutas.textContent = `(${rutaT.ruta}): ${rutaT.descripcion} --> $${rutaT.precio}`;
+        index = optionDropdownRutas.value;
+        selectRuta.appendChild(optionDropdownRutas);
+    });
+}
+
+// Función para registrar un nuevo servicio
+function registrarServicio() {
+    let newServicio = new Servicios(empresa.value, nameContacto.value, numContacto.value, +numUsuarios.value, selectRuta.value);
+    console.log(newServicio);
+    servicios.push(newServicio);
+
+}
+
+// Evento para registrar servicio o detectara si el formulario no está completo
+enviarSolicitud.addEventListener('click', (evento) => {
+    evento.preventDefault(); //*Para evitar que la pagina se refresque al presionar el btn
+
+
+    if (empresa.value !== "" && nameContacto.value !== "" && numContacto.value !== "" && numUsuarios.value !== "" && selectRuta.value !== "") {
+
+        registrarServicio();
+        alert('Servicio registrado existosamente');
+        cleanForm(formSolicitud);
+        reporteServicios();
+
+    } else {
+        alert(`Formulario incompleto, todos campos son obligatorio`);
+    }
+
+})
+
+// Función para limpiar el formulario
+function cleanForm(form) {
+    form.reset(); //* Para limpiar el formulario
+}
+
+cargarRutasDropdwn();
+
+// Función para dibujar la tabla
+function reporteServicios() {
+    const bodyTabla = document.getElementById("items");
+    bodyTabla.innerHTML = ``; //* Iniciar el body de la tabla vacio
+    servicios.forEach((item, index) => {
+        bodyTabla.innerHTML = bodyTabla.innerHTML +
+            `<tr>
+                <th>${index + 1}</th>
+                <td>${item.empresa}</td>
+                <td>${item.nombreContact}</td>
+                <td>${item.numeroContact}</td>
+                <td>${item.numeroUsuarios}</td>
+                <td>${item.seleccionRuta}</td>                        
+
+            </tr>
+        `;
+
+    });
+}
+
+// Evento para vaciar la tabla
+vaciarTabla.addEventListener('click', (eventovaciar) => {
+    eventovaciar.preventDefault(); //*Para evitar que la pagina se refresque al presionar el btn
+    tableFill.innerHTML = "";
+    servicios = [];
+
+})
+
+
+//* MEJORA FUTURA, A MEDIDA QUE SE VA GENERANDO PARA FILA DE LA TABLA, IR GENERANDO UN ARRAY CON LOS VALORES PARA HACER UN REDUCE Y DAR EL TOTAL DE LOS SERVICIOS

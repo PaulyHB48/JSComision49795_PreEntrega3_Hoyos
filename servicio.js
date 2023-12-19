@@ -17,16 +17,22 @@ Se va generando para la empresa de transporte un archivo compilado con los servi
 MEJORA FUTURA: Se solicitará fecha y hora y se organizará el archivo según fecha y hora del servicios.
 */
 
-class Ruta { // Constructor de objetos
-    ruta;
-    descripcion;
+///* Clase para generar objetos de "Servicios solicitados"
+
+class Servicios {
+    empresa;
+    nombreContact;
+    numeroContact;
+    numeroUsuarios;
+    seleccionRuta;
     precio;
-
-    constructor(ruta,descripcion,precio){
-        this.ruta = ruta;
-        this.descripcion = descripcion;
+    constructor(empresa, nombreContact, numeroContact, numeroUsuarios, seleccionRuta, precio) {
+        this.empresa = empresa;
+        this.nombreContact = nombreContact;
+        this.numeroContact = numeroContact;
+        this.numeroUsuarios = numeroUsuarios;
+        this.seleccionRuta = seleccionRuta;
         this.precio = precio;
-
     }
-
 }
+
